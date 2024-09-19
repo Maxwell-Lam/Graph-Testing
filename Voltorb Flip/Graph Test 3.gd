@@ -1,7 +1,7 @@
 extends Node2D
 
 var counter := 0; 
-var size := 10; 
+var size := 5; 
 
 var previousNode = null;
 var nextNode = null; 
@@ -54,7 +54,6 @@ func make_grid(size: int) -> void:
 			b.xCord = i; 
 			b.yCord = j; 
 			b.global_position = Vector2(i * 50, j * 50); 
-			
 			# Create Voltblip value
 			b.update_visual(randi_range(0, 3))
 			
@@ -116,6 +115,7 @@ func get_voltflip_nodes() -> Array:
 
 	return(voltflipNodes)
 
+#Not being used. 
 func connect_nodes(inputNode, inputPrevious):
 	var notVisited = inputNode.visited_neighbors(); 
 

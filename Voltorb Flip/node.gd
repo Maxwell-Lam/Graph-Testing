@@ -21,7 +21,8 @@ var previousNodeList = [null, null, null, null]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$Label.set_text(str(id))
+	pass;#
+	#$Label.set_text(str(id))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -44,7 +45,6 @@ func get_text():
 	return($Label.text)
 
 func upgrade_text(inputText:int):
-	id = inputText
 	$Label.set_text(str(inputText)); 
 
 func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
@@ -68,5 +68,6 @@ func update_previous(inputNode):
 	
 func update_visual(spriteValue : int) -> void:
 	nodeValue = spriteValue
+	upgrade_text(spriteValue)
 	if (nodeValue == 0):
 		$Sprite2D.frame = 1; 
