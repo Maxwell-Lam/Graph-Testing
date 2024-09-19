@@ -7,6 +7,8 @@ var previousNode = null;
 var nextNode = null; 
 var tailNode = null; 
 
+var rootNode = null; 
+
 var nodeCreationList = []
 
 @onready var nodeSpawn = preload("res://node.tscn")
@@ -14,7 +16,6 @@ var nodeCreationList = []
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass; 
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -25,12 +26,19 @@ func _input(event: InputEvent) -> void:
 		if event.keycode == KEY_C:
 			clear_variables()
 			make_grid(size); 
-			#var inputNode = find_node(nodeCreationList, 0, 0);
+			var inputNode = find_node(nodeCreationList, 0, 0);
+			rootNode = find_node(nodeCreationList, 0, 0)
+			
+			print(get_column_sum(size))
+			print(get_row_sum(size))
+			
 			#connect_nodes(inputNode, null); 
 
 func clear_variables():
 	counter = 0; 
 	nodeCreationList = []
+	rootNode = null; 
+	previousNode = null; 
 
 func find_node(inputList, desiredX, desiredY):
 	for eachNode in inputList: 
@@ -62,6 +70,38 @@ func make_grid(size: int) -> void:
 				b.westNode = find_node(nodeCreationList, b.xCord - 1, b.yCord);	
 			if (b.yCord > 0):
 				b.northNode = find_node(nodeCreationList,b.xCord, b.yCord - 1);	
+
+func get_column_sum(size: int) -> Array:
+	var selectedNode = rootNode; 
+	var selectedColumn = rootNode; 
+	var columnSums = []
+	for i in size: 
+		var sum = 0; 
+		for j in size: 
+			sum = sum + selectedNode.id
+			selectedNode = selectedNode.southNode
+			 
+		columnSums.append(sum)
+		selectedColumn = selectedColumn.eastNode
+		selectedNode = selectedColumn
+		
+	return(columnSums)
+
+func get_row_sum(size:int) -> Array:
+	var selectedNode = rootNode; 
+	var selectedRow = rootNode; 
+	var rowSums = []
+	for i in size: 
+		var sum = 0; 
+		for j in size: 
+			sum = sum + selectedNode.id
+			selectedNode = selectedNode.eastNode
+			 
+		rowSums.append(sum)
+		selectedRow = selectedRow.southNode
+		selectedNode = selectedRow
+		
+	return(rowSums)
 
 func connect_nodes(inputNode, inputPrevious):
 	var notVisited = inputNode.visited_neighbors(); 
