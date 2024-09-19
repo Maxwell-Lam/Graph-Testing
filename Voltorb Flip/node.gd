@@ -11,6 +11,8 @@ var westNode = null;
 var xCord := 0; 
 var yCord := 0;
 
+var nodeValue := 0; 
+
 var visitedCreated = false; 
 var visitedSolved = false; 
 
@@ -64,3 +66,7 @@ func update_previous(inputNode):
 	else:
 		return -1; 
 	
+func update_visual(spriteValue : int) -> void:
+	nodeValue = spriteValue
+	if (nodeValue == 0):
+		$Sprite2D.frame = 1; 

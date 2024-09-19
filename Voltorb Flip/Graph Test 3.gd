@@ -29,13 +29,13 @@ func _input(event: InputEvent) -> void:
 			var inputNode = find_node(nodeCreationList, 0, 0);
 			rootNode = find_node(nodeCreationList, 0, 0)
 			
-			print(get_column_sum(size))
-			print(get_row_sum(size))
-			
 			#connect_nodes(inputNode, null); 
 
 func clear_variables():
 	counter = 0; 
+	
+	for i in nodeCreationList:
+		i.queue_free()
 	nodeCreationList = []
 	rootNode = null; 
 	previousNode = null; 
@@ -54,6 +54,11 @@ func make_grid(size: int) -> void:
 			b.xCord = i; 
 			b.yCord = j; 
 			b.global_position = Vector2(i * 50, j * 50); 
+			
+			# Create Voltblip value
+			b.update_visual(randi_range(0, 3))
+			
+			
 			nodeCreationList.append(b)
 			get_parent().add_child(b)
 			
@@ -102,6 +107,14 @@ func get_row_sum(size:int) -> Array:
 		selectedNode = selectedRow
 		
 	return(rowSums)
+
+func get_voltflip_nodes() -> Array:
+	var voltflipNodes = []
+	for i in nodeCreationList:
+		if (i.nodeValue == 0):
+			voltflipNodes.append(i)
+
+	return(voltflipNodes)
 
 func connect_nodes(inputNode, inputPrevious):
 	var notVisited = inputNode.visited_neighbors(); 
