@@ -10,6 +10,9 @@ var tailNode = null;
 var rootNode = null; 
 
 var nodeCreationList = []
+var columnVoltCount = []
+var rowVoltCount = []
+
 
 @onready var nodeSpawn = preload("res://node.tscn")
 
@@ -28,6 +31,9 @@ func _input(event: InputEvent) -> void:
 			make_grid(size); 
 			var inputNode = find_node(nodeCreationList, 0, 0);
 			rootNode = find_node(nodeCreationList, 0, 0)
+			
+			print(get_row_VoltCount(size))
+			print(get_column_VoltCount(size))
 			
 			#connect_nodes(inputNode, null); 
 
@@ -56,10 +62,12 @@ func make_grid(size: int) -> void:
 			b.global_position = Vector2(i * 50, j * 50); 
 			# Create Voltblip value
 			b.update_visual(randi_range(0, 3))
-			
+		
 			
 			nodeCreationList.append(b)
 			get_parent().add_child(b)
+		#
+
 			
 	var copyList = nodeCreationList.duplicate()
 		
@@ -107,13 +115,47 @@ func get_row_sum(size:int) -> Array:
 		
 	return(rowSums)
 
-func get_voltflip_nodes() -> Array:
+func get_voltflip_nodes(size:int) -> Array:
 	var voltflipNodes = []
 	for i in nodeCreationList:
 		if (i.nodeValue == 0):
 			voltflipNodes.append(i)
 
 	return(voltflipNodes)
+
+func get_row_VoltCount(size:int) -> Array:
+	var selectedNode = rootNode; 
+	var selectedRow = rootNode; 
+	var rowCount = []
+	for i in size: 
+		var count = 0; 
+		for j in size: 
+			if selectedNode.nodeValue == 0:
+				count += 1; 
+			selectedNode = selectedNode.eastNode
+			 
+		rowCount.append(count)
+		selectedRow = selectedRow.southNode
+		selectedNode = selectedRow
+		
+	return(rowCount)
+
+func get_column_VoltCount(size:int) -> Array:
+	var selectedNode = rootNode; 
+	var selectedColumn = rootNode; 
+	var columnCount = []
+	for i in size: 
+		var count = 0; 
+		for j in size: 
+			if selectedNode.nodeValue == 0:
+				count += 1; 
+			selectedNode = selectedNode.southNode
+			 
+		columnCount.append(count)
+		selectedColumn = selectedColumn.eastNode
+		selectedNode = selectedColumn
+		
+	return(columnCount)
 
 #Not being used. 
 func connect_nodes(inputNode, inputPrevious):

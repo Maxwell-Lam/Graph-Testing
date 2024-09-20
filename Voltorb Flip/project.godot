@@ -10,8 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Graph Test 3"
-run/main_scene="res://display.tscn"
+run/main_scene="res://Graph Test 3.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://icon.svg"
 
