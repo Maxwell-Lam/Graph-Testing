@@ -10,15 +10,24 @@ var tailNode = null;
 var rootNode = null; 
 
 var nodeCreationList = []
+
 var columnVoltCount = []
 var rowVoltCount = []
 
 
 @onready var nodeSpawn = preload("res://node.tscn")
 
+func test_cases(id = 0) -> void:
+	if (id == 0):
+		columnVoltCount = [2, 2, 2, 1, 1]
+		rowVoltCount = [2, 1, 1, 2, 2]
+	elif (id == 1):
+		columnVoltCount = [1, 1, 1, 2, 2]
+		rowVoltCount = [0, 2, 2, 0, 3]
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass; 
+	test_cases(0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -31,9 +40,10 @@ func _input(event: InputEvent) -> void:
 			make_grid(size); 
 			var inputNode = find_node(nodeCreationList, 0, 0);
 			rootNode = find_node(nodeCreationList, 0, 0)
+			solve_Voltflip(size, rootNode, rootNode)
 			
-			print(get_row_VoltCount(size))
-			print(get_column_VoltCount(size))
+			#print(get_row_VoltCount(size))
+			#print(get_column_VoltCount(size))
 			
 			#connect_nodes(inputNode, null); 
 
@@ -61,7 +71,7 @@ func make_grid(size: int) -> void:
 			b.yCord = j; 
 			b.global_position = Vector2(i * 50, j * 50); 
 			# Create Voltblip value
-			b.update_visual(randi_range(0, 3))
+			#b.update_visual(randi_range(0, 3))
 		
 			
 			nodeCreationList.append(b)
@@ -157,6 +167,38 @@ func get_column_VoltCount(size:int) -> Array:
 		
 	return(columnCount)
 
+func solve_Voltflip(size:int, selectedNode:Node, selectedRow:Node) -> bool:
+	print("SelectedNode: ", selectedNode.xCord, "  ", selectedNode.yCord)
+	print("Info: ", get_row_VoltCount(size)[selectedNode.yCord] , "  ",  rowVoltCount[selectedNode.yCord])
+	if (get_row_VoltCount(size)[selectedNode.yCord] < rowVoltCount[selectedNode.yCord]) and (get_column_VoltCount(size)[selectedNode.xCord] < columnVoltCount[selectedNode.xCord]):
+		selectedNode.update_visual(0)
+	else:
+		selectedNode.update_visual(-1)
+		
+	if (get_row_VoltCount(size)[selectedNode.yCord] == rowVoltCount[selectedNode.yCord]):
+		if (selectedRow.southNode != null):
+			print("a: ", selectedNode.xCord, "  ", selectedNode.yCord)
+			selectedNode = selectedRow.southNode; 
+			selectedRow = selectedNode
+		else:
+			return(true)
+	else:
+		if (selectedNode.eastNode != null):
+			selectedNode = selectedNode.eastNode; 
+			print("b: ", selectedNode.xCord, "  ", selectedNode.yCord)
+		else:
+			if (selectedRow.southNode != null):
+				selectedNode = selectedRow.southNode; 
+				selectedRow = selectedNode
+				print("c: ", selectedNode.xCord, "  ", selectedNode.yCord)
+			else:
+				return(true)
+	
+	if (get_row_VoltCount(size) == rowVoltCount) and (get_column_sum(size) == columnVoltCount):
+		return(true)
+	else:
+		return(solve_Voltflip(size, selectedNode, selectedRow))	
+	
 #Not being used. 
 func connect_nodes(inputNode, inputPrevious):
 	var notVisited = inputNode.visited_neighbors(); 

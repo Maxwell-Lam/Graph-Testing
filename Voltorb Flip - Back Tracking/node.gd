@@ -11,7 +11,8 @@ var westNode = null;
 var xCord := 0; 
 var yCord := 0;
 
-var nodeValue := 0; 
+var nodeValue := -1; 
+var nodeSolved = false; 
 
 var visitedCreated = false; 
 var visitedSolved = false; 
@@ -21,8 +22,7 @@ var previousNodeList = [null, null, null, null]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass; 
-	#$Label.set_text(str(id))
+	$Label.set_text(str(id))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -49,10 +49,7 @@ func upgrade_text(inputText:int):
 
 func _on_area_2d_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		print(northNode.id)
-		print(eastNode.id)
-		print(southNode.id)
-		print(westNode.id)
+		print(xCord, " ", yCord)
 		
 func update_previous(inputNode):
 	if (previousNodeList[0] == null):
